@@ -1,0 +1,22 @@
+{
+  "name": "qa-automation-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hnkhuy/qa-automation-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hnkhuy/qa-automation-challenge/issues"
+  },
+  "homepage": "https://github.com/hnkhuy/qa-automation-challenge#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^24.0.10"
+  }
+}
