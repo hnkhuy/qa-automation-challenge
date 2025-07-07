@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
+import * as dotenv from 'dotenv';
+import 'dotenv/config';
+
+const BASE_URL = process.env.BASE_URL!;
+const LOGIN_URL = `${BASE_URL}/auth/login`;
+const DASHBOARD_URL = `${BASE_URL}/dashboard/index`;
 
 test('@demo Verify login with valid credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
@@ -7,7 +13,7 @@ test('@demo Verify login with valid credentials', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('Admin', 'admin123');
 
-  await expect(page).toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).toHaveURL(DASHBOARD_URL);
   await expect(page).toHaveTitle(/OrangeHRM/);
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 });
@@ -18,7 +24,7 @@ test('@demo Verify login with invalid credentials', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('Admin', 'wrongpass');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -30,7 +36,7 @@ test('Verify login with empty username', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('', 'admin123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const usernameErrorMessage = await loginPage.getInputErrorMessage(0);
   expect(usernameErrorMessage).toBe('Required');
@@ -42,7 +48,7 @@ test('Verify login with empty password', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('Admin', '');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const passwordErrorMessage = await loginPage.getInputErrorMessage(1);
   expect(passwordErrorMessage).toBe('Required');
@@ -54,7 +60,7 @@ test('Verify login with both fields empty', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('', '');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const usernameErrorMessage = await loginPage.getInputErrorMessage(0);
   expect(usernameErrorMessage).toBe('Required');
@@ -69,7 +75,7 @@ test('Verify username is case-sensitive', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('admin', 'admin123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -81,7 +87,7 @@ test('@demo Verify password is case-sensitive', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('Admin', 'ADMIN123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -121,7 +127,7 @@ test('Verify login with special characters in username', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login('Admin!@#', 'admin123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -133,7 +139,7 @@ test('Verify login with leading/trailing whitespace in username', async ({ page 
   await loginPage.navigate();
   await loginPage.login(' Admin ', 'admin123');
 
-  await expect(page).toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).toHaveURL(DASHBOARD_URL);
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 });
 
@@ -143,7 +149,7 @@ test('Verify login with leading/trailing whitespace in password', async ({ page 
   await loginPage.navigate();
   await loginPage.login('Admin', ' admin123 ');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -157,7 +163,7 @@ test('Verify multiple invalid login attempts', async ({ page }) => {
   const maxAttempts = 5;
   for (let i = 0; i < maxAttempts - 1; i++) {
     await loginPage.login('Admin', 'wrongpass');
-    await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+    await expect(page).not.toHaveURL(DASHBOARD_URL);
 
     const errorMessage = await loginPage.getErrorMessage();
     expect(errorMessage).toBe('Invalid credentials');
@@ -181,11 +187,11 @@ test('Verify login from multiple parallel tabs', async ({ browser }) => {
   await loginPage2.navigate();
 
   await loginPage1.login('Admin', 'admin123');
-  await expect(page1).toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page1).toHaveURL(DASHBOARD_URL);
   await expect(page1.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
   await loginPage2.login('Admin', 'admin123');
-  await expect(page2).toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page2).toHaveURL(DASHBOARD_URL);
   await expect(page2.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
   await context1.close();
@@ -198,7 +204,7 @@ test('Verify SQL Injection: \' OR \'1\'=\'1', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login("' OR '1'='1", 'admin123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -210,7 +216,7 @@ test('Verify SQL Injection: admin\' --', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login("admin' --", 'admin123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -222,7 +228,7 @@ test('Verify SQL Injection: admin\' #', async ({ page }) => {
   await loginPage.navigate();
   await loginPage.login("admin' #", 'admin123');
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
@@ -238,14 +244,14 @@ test('Verify XSS injection in input fields', async ({ page }) => {
     throw new Error('Unexpected dialog: ' + dialog.message());
   });
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
 });
 
 test('Verify XSS injection in URL parameters', async ({ page }) => {
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login?username=<script>alert(1)</script>');
+  await page.goto(LOGIN_URL + '?username=<script>alert(1)</script>');
 
   page.on('dialog', dialog => {
     throw new Error('Unexpected dialog: ' + dialog.message());
@@ -255,14 +261,14 @@ test('Verify XSS injection in URL parameters', async ({ page }) => {
   await loginPage.passwordInput.fill('admin123');
   await loginPage.loginButton.click();
 
-  await expect(page).not.toHaveURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+  await expect(page).not.toHaveURL(DASHBOARD_URL);
 
   const errorMessage = await loginPage.getErrorMessage();
   expect(errorMessage).toBe('Invalid credentials');
 });
 
 test('Verify missing CSRF token', async ({ page }) => {
-  await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  await page.goto(LOGIN_URL);
 
   await page.route('**/auth/login', (route, request) => {
     const postData = request.postDataJSON();
@@ -280,7 +286,7 @@ test('Verify missing CSRF token', async ({ page }) => {
 test('Verify Content-Security-Policy (CSP) Header', async ({ page }) => {
   const [response] = await Promise.all([
     page.waitForResponse(response => response.url().includes('/auth/login') && response.status() === 200),
-    page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+    page.goto(LOGIN_URL)
   ]);
 
   const cspHeader = response.headers()['content-security-policy'];
