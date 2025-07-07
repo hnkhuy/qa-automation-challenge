@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
 
-test('Verify login with valid credentials', async ({ page }) => {
+test('@demo Verify login with valid credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.navigate();
@@ -12,7 +12,7 @@ test('Verify login with valid credentials', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 });
 
-test('Verify login with invalid credentials', async ({ page }) => {
+test('@demo Verify login with invalid credentials', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.navigate();
@@ -75,7 +75,7 @@ test('Verify username is case-sensitive', async ({ page }) => {
   expect(errorMessage).toBe('Invalid credentials');
 });
 
-test('Verify password is case-sensitive', async ({ page }) => {
+test('@demo Verify password is case-sensitive', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   await loginPage.navigate();

@@ -15,7 +15,7 @@ test.beforeEach(async ({ page }) => {
     await expect(page).toHaveURL(`${BASE_URL}/dashboard/index`);
 });
 
-test('Verify search with valid menu keyword', async ({ page }) => {
+test('@demo Verify search with valid menu keyword', async ({ page }) => {
     const searchPage = new SearchPage(page);
     await searchPage.search('Directory');
     await expect(searchPage.searchResults).toBeVisible();
@@ -36,7 +36,7 @@ test('Verify search with lowercase input', async ({ page }) => {
     await expect(searchPage.searchResults).toHaveText('Directory');
 });
 
-test('Verify search with uppercase input', async ({ page }) => {
+test('@demo Verify search with uppercase input', async ({ page }) => {
     const searchPage = new SearchPage(page);
     await searchPage.search('DIRECTORY');
     await expect(searchPage.searchResults).toBeVisible();
