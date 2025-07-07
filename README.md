@@ -46,3 +46,9 @@ npx playwright test tests/performance
 
 ## Tagging Tests
 - Use `.tag('regression')`, `.tag('api')`, etc., in your test files for easy selection.
+
+## How to Run the Demo
+```
+ npx playwright test --grep "@demo"
+ npx playwright show-report
+```
