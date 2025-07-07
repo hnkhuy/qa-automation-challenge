@@ -17,6 +17,8 @@
   "homepage": "https://github.com/hnkhuy/qa-automation-challenge#readme",
   "devDependencies": {
     "@playwright/test": "^1.53.2",
-    "@types/node": "^24.0.10"
+    "@types/node": "^24.0.10",
+    "axios": "^1.10.0",
+    "dotenv": "^17.0.1"
   }
 }
